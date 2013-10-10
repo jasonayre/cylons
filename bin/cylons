@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require 'thor'
+require 'cylons'
+class Services < ::Thor
+  class_option :app, :default => "./config/environment.rb"
+  
+  desc "start", "Start cylon services"
+  def start
+    puts "Starting services"
+    require options[:app]
+    
+    raise ::Cylons::CouldNotConnectToRegistry unless ::Cylons::Connection.connected?
+    
+    ::Dir.glob(::Rails.root.join('app', 'models', "*.rb")).each{ |file| load file }
+    
+    ::Cylons.logger.info "Cylon Remotes: #{::Cylons::RemoteRegistry.remotes}"
+    
+    ::Cylons::RemoteRegistry.register_schemas
+    
+    ::Cylons::ServiceManager.start
+
+    loop do
+      
+    end
+  end
+end
+
+::Services.start
+
+[:INT, :QUIT, :TERM].each do |signal|
+  trap(signal) do
+    ::Cylons.logger.info "Stopping Cylon Services"
+    puts "Stopping Cylon Services"
+    exit 0
+  end
+end
+
