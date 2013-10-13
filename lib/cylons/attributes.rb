@@ -3,7 +3,7 @@ module Cylons
     def read_attribute(name)
       name = name.to_s
       
-      if @attributes.has_key?(name)
+      if @attributes.has_key?(name) || self.respond_to?(name)
         @attributes[name]
       else
         raise ::ActiveAttr::UnknownAttributeError, "unknown attribute: #{name}"
@@ -19,7 +19,7 @@ module Cylons
       
       name = name.to_s
   
-      if @attributes.has_key?(name)
+      if @attributes.has_key?(name) || self.respond_to?(name)
         @attributes[name] = value
       else
         raise ::ActiveAttr::UnknownAttributeError, "unknown attribute: #{name}"

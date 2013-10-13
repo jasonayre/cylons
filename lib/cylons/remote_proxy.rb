@@ -10,7 +10,7 @@ module Cylons
     include ActiveAttr::MassAssignment
     include ::Cylons::Attributes
     extend ::Cylons::Associations::ClassMethods
-    
+        
     def self.load_schema
       @schema = ::Cylons::RemoteRegistry.get_remote_schema(self.name.downcase)
       
