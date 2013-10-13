@@ -13,9 +13,8 @@ module Cylons
         if node.id != ::Cylons.configuration.remote_namespace
           namespace = node.id
           remote_class_names = node.actors - [:node_manager, :dcell_server, :info]
-          puts "HERE ARE THE REMOTE CLASS NAMES"
-          puts remote_class_names
           remote_class_names.select{|name| name.to_s.include?("Service") }.each do |remote_class_name|
+            puts "Building Remote For: #{remote_class_name}"
             build_remote(namespace, remote_class_name)
           end if remote_class_names.any?
         end
@@ -26,9 +25,7 @@ module Cylons
     
     def self.build_remote(namespace, remote_class_name)
       proxy_class_name = remote_class_name.to_s.gsub('Service', '')
-      # Object.const_set(namespace.to_s, Module.new) unless !!Object.const_defined?(namespace.to_s)
-      # namespace.constantize.const_set(remote_class_name, Class.new)
-      Object.const_set(proxy_class_name, Class.new(::Cylons::RemoteProxy))
+      Object.const_set(proxy_class_name, Class.new(Cylons::RemoteProxy))
       
       proxy_class = proxy_class_name.constantize
       proxy_class.load_schema

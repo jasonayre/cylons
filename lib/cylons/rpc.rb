@@ -15,14 +15,17 @@ module Cylons
         execute(:create, params)
       end
       
+      def destroy(id)
+        execute(:destroy, id)
+      end
+      
       def execute(rpc_method, request_params = {})
         begin
           @last_response = self.class.model.send(rpc_method.to_sym, request_params)
         rescue => e
+          puts e.inspect
           @last_response = {:error => e.message}
         end
-
-        @last_response
       end
       
       def execute_with_args(rpc_method, *args)
@@ -67,8 +70,12 @@ module Cylons
         execute(:scope_by, params).to_a
       end
       
-      def save(id, attributes)
-        execute_with_args(:update, id, attributes)
+      def save(id = nil, attributes)
+        if(id)
+          execute_with_args(:update, id, attributes)
+        else
+          execute(:create, attributes)
+        end
       end
       
       def update(attributes)

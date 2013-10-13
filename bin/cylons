@@ -21,7 +21,7 @@ class Services < ::Thor
     ::Cylons::ServiceManager.start
 
     loop do
-      
+    
     end
   end
 end

@@ -19,7 +19,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   
   spec.add_dependency "active_attr"
-  spec.add_dependency "dcell"
+  spec.add_dependency "active_attr"
+  spec.add_dependency "dcell", "0.15.0"
   spec.add_dependency "thor"
   spec.add_dependency "zk"
   spec.add_dependency 'pry'

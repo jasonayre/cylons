@@ -1,10 +1,5 @@
 module Cylons
   module Attributes
-    
-    # Read attribute from the attributes hash
-    #
-    attr_accessor :attributes
-    
     def read_attribute(name)
       name = name.to_s
       
@@ -32,6 +27,5 @@ module Cylons
     end
     alias_method :[]=, :write_attribute
     alias_method :attribute=, :write_attribute
-    
   end
 end

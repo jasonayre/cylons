@@ -11,7 +11,7 @@ require 'cylons/attributes'
 require 'cylons/connection'
 require 'cylons/configuration'
 require 'cylons/errors'
-require 'cylons/search'
+# require 'cylons/search'
 # require 'cylons/rpc'
 require 'cylons/remote'
 require 'cylons/remote_registry'
@@ -48,8 +48,15 @@ module Cylons
     alias_method :config, :configuration
   end
   
-  def self.clear_registry
-    ::DCell.registry.instance_variable_get("@global_registry").clear  
+
+  
+  #dont load remotes if test env or SKIP_CYLONS=true (such as when running rake tasks)
+  def self.silence?
+    skip_cylons? || (defined?(Rails) && Rails.env == "test")
+  end
+  
+  def self.skip_cylons?
+    !!ENV["SKIP_CYLONS"]
   end
   
 end

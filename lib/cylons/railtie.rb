@@ -10,12 +10,12 @@ require 'will_paginate'
 module Cylons
   class Railtie < ::Rails::Railtie
     config.after_initialize do
-      ::Cylons::RemoteDiscovery.load_remotes unless ::Cylons::RemoteDiscovery.loaded?
+      ::Cylons::RemoteDiscovery.load_remotes unless ::Cylons::RemoteDiscovery.loaded? || ::Cylons.silence?
     end
 
     ::ActiveSupport.on_load(:cylons) do
-      ::Cylons::Connection.connect unless ::Cylons::Connection.connected?
-      ::Cylons::RemoteDiscovery.load_remotes unless ::Cylons::RemoteDiscovery.loaded?
+      ::Cylons::Connection.connect unless ::Cylons::Connection.connected? unless ::Cylons::RemoteDiscovery.loaded? || ::Cylons.silence?
+      ::Cylons::RemoteDiscovery.load_remotes unless ::Cylons::RemoteDiscovery.loaded? || ::Cylons.silence?
     end
     
     #todo: overwrite ransack search method to auto paginate by default, or pull ransack out..
