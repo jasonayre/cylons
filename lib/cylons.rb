@@ -29,6 +29,14 @@ require 'pry'
 # require 'cylons/railtie' if defined?(Rails)
 
 module Cylons
+  #dont load remotes if test env or SKIP_CYLONS=true (such as when running rake tasks)  
+  def self.skip_cylons?
+    !!ENV["SKIP_CYLONS"]
+  end
+    
+  def self.silence?
+    skip_cylons? || (defined?(Rails) && Rails.env == "test")
+  end
   
   class << self
     attr_accessor :configuration, :logger
@@ -47,17 +55,5 @@ module Cylons
     
     alias_method :config, :configuration
   end
-  
-
-  
-  #dont load remotes if test env or SKIP_CYLONS=true (such as when running rake tasks)
-  def self.silence?
-    skip_cylons? || (defined?(Rails) && Rails.env == "test")
-  end
-  
-  def self.skip_cylons?
-    !!ENV["SKIP_CYLONS"]
-  end
-  
 end
 

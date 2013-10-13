@@ -28,7 +28,7 @@ module Cylons
     end
     
     def destroy
-      raise ::Cylons::Errors::HowDoYouKillThatWhichHasNoLife unless self.attributes["id"]
+      return unless self.attributes["id"]
       result = self.class.remote.destroy(self.attributes["id"])
     end
     

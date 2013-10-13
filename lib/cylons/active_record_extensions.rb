@@ -7,11 +7,11 @@ module Cylons
       SEARCH_OPTION_KEYS = [:opts, :options].freeze
       
       def reload_remotes!
-        ::Cylons::RemoteDiscovery.load_remotes
+        ::Cylons::RemoteDiscovery.load_remotes unless ::Cylons.silence?
       end
       
       def remote_schema
-        ::Cylons::RemoteRegistry.get_remote_schema(self.name)
+        ::Cylons::RemoteRegistry.get_remote_schema(self.name) unless ::Cylons.silence?
       end
       
       def remote_belongs_to(*args)
