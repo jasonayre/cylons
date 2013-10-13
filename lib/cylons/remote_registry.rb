@@ -11,6 +11,10 @@ module Cylons
       attr_accessor :remotes, :loaded_remotes
     end
     
+    def self.clear_registry
+      ::DCell.registry.instance_variable_get("@global_registry").clear
+    end
+    
     def self.register(klass)
       @remotes << klass
     end
