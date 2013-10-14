@@ -8,12 +8,27 @@ Cylons lets your models in one Rails app, act very much like your ActiveRecord m
 
 
 ### Depends heavily on:
-
 DCell
 Zookeeper (for now, only even though )
 
-### Quick start
+### Heavily inspired by
+This concept - http://www.youtube.com/watch?v=Hu-jvAWTZ9o&feature=autoplay&list=PLF88804CB7380F32C&playnext=1#t=4m59s
+ActiveRemote - https://github.com/liveh2o/active_remote
+DCell - https://github.com/celluloid/dcell
 
+### Alternatives
+Ill list more later, because I've literally tried at least the 90% majority of the ruby soa "solutions", but if you are looking for an "enterprise" level SOA framework, I'd recommend:
+
+ActiveRemote - https://github.com/liveh2o/active_remote
+Protobuf - https://github.com/localshred/protobuf
+
+Add those two together == winning.
+
+### Reasons for building
+Originally it started as a way to communicate between my raspberry pis, because http is so last summer. Soon I found myself wanting a database connection. So I ended up making it more active_record like. Those aren't reasons but brain tired done typing yep.
+
+
+### Quick start
 
 
 ### How it works?
@@ -21,15 +36,18 @@ Zookeeper (for now, only even though )
 ### Install ZK, Clone and run the examples
 
 ```
-git clone blah
+git clone https://github.com/jasonayre/cylons_demo
 
 ```
 
 open 4 new terminal windows/tabs
 
 *Prepare the inventory management service, inventory*
+
+```
 cd inventory
 SKIP_CYLONS=true bundle exec rake db:create && rake db:migrate && rake db:seed
+```
 
 *Prepare the user credentials service, identify*
 ```
