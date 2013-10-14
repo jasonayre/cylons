@@ -27,6 +27,8 @@ module Cylons
       attr_accessor :remote, :schema
     end
     
+    attr_accessor :errors
+    
     def destroy
       return unless self.attributes["id"]
       result = self.class.remote.destroy(self.attributes["id"])
@@ -40,8 +42,8 @@ module Cylons
       else
         result = self.class.remote.save(nil, self.attributes.with_indifferent_access.slice(*self.changed))
         
-        if result.is_a?(Hash)
-          @errors ||= result
+        if result.errors.messages.present?
+          self.assign_attributes({:errors => result.errors})
         else
           self.assign_attributes(result.attributes)
         end
