@@ -13,14 +13,8 @@ module Cylons
       raise ::Cylons::RemoteNamespaceNotSet unless ::Cylons.configuration.remote_namespace.present?
     end
     
-    #todo: FixMe
-    #super hacky.. pass in SKIP_CYLONS=true when running rake tasks for now, ew
-    def self.connect?
-      ENV['SKIP_CYLONS'].present?
-    end
-    
     def self.connect
-      return if connect?
+      return if ::Cylons.silence?
       validate_configuration
       ::Cylons.logger.info "STARTING DCELL FOR #{::Cylons.configuration.remote_namespace} NOW"
       

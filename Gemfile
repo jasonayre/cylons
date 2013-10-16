@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
+gem 'dcell', github: 'jasonayre/dcell',        branch: 'master'
 
-# Specify your gem's dependencies in skynext.gemspec
 gemspec

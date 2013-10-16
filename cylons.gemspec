@@ -19,13 +19,12 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   
   spec.add_dependency "active_attr"
-  spec.add_dependency "active_attr"
-  spec.add_dependency "dcell", "0.15.0"
   spec.add_dependency "thor"
   spec.add_dependency "zk"
   spec.add_dependency 'pry'
   spec.add_dependency "will_paginate"
   spec.add_dependency "ransack"
+  spec.add_runtime_dependency "dcell"
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"

@@ -10,8 +10,6 @@ class Services < ::Thor
     puts "Starting services"
     require options[:app]
     
-    raise ::Cylons::CouldNotConnectToRegistry unless ::Cylons::Connection.connected?
-    
     ::Dir.glob(::Rails.root.join('app', 'models', "*.rb")).each{ |file| load file }
     
     ::Cylons.logger.info "Cylon Remotes: #{::Cylons::RemoteRegistry.remotes}"

@@ -22,9 +22,7 @@ require 'dcell'
 require 'socket'
 require 'zk'
 require 'dcell/registries/zk_adapter'
-require 'cylons/railtie'
 require 'pry'
-# require 'cylons/railtie' if defined?(Rails)
 
 module Cylons
   #dont load remotes if test env or SKIP_CYLONS=true (such as when running rake tasks)  
@@ -55,3 +53,4 @@ module Cylons
   end
 end
 
+require 'cylons/railtie' if defined?(Rails)

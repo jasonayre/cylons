@@ -16,6 +16,7 @@ module Cylons
     end
     
     def self.register(klass)
+      ::Cylons::Connection.connect unless ::Cylons::Connection.connected?
       @remotes << klass
     end
   
