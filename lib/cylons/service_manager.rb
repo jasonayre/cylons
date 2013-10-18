@@ -39,6 +39,12 @@ module Cylons
     
     def self.remotes?
       ::Cylons::RemoteRegistry.remotes.any?
-    end    
+    end
+    
+    def self.stop
+      ::Cylons::RemoteRegistry.remotes.each do |remote|
+        remote.stop
+      end
+    end
   end
 end

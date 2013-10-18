@@ -15,8 +15,17 @@ module Cylons
     def self.zk(options = {})
       zk_registry_hash = zk_defaults.dup
       zk_registry_hash[:server] = ::Cylons.configuration.registry_address if ::Cylons.configuration.registry_address
-      zk_registry_hash[:server] = ::Cylons.configuration.registry_port if ::Cylons.configuration.registry_port
+      zk_registry_hash[:registry_port] = ::Cylons.configuration.registry_port if ::Cylons.configuration.registry_port
       zk_registry_hash
+    end
+    
+    def self.redis_defaults
+      {:adapter => 'redis', :port => 6379, :address => "127.0.0.1"}
+    end
+    
+    def self.redis(options = {})
+      redis_registry_hash = redis_defaults.dup
+      redis_registry_hash
     end
   end
 end

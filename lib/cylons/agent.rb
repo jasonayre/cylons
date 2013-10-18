@@ -3,7 +3,7 @@ require 'cylons/associations'
 module Cylons
   
   #this is the local application remote which is dynamically built, from the registry
-  class RemoteProxy
+  class Agent
     include ::ActiveModel::Dirty
     include ::ActiveModel::AttributeMethods
     include ActiveAttr::Model
@@ -11,6 +11,25 @@ module Cylons
     include ::Cylons::Attributes
     extend ::Cylons::Associations::ClassMethods
     
+    class << self
+      attr_accessor :remote, :schema
+    end
+    
+    def self.inherited(subklass)
+      ::Cylons.connect unless ::Cylons.connected?
+      build_agent(subklass)
+    end
+    
+    def self.build_agent(subklass)
+      agent_namespace = ::Cylons::RemoteDiscovery.namespace_for_agent(subklass.name)
+      subklass.load_schema
+      subklass.remote = ::DCell::Node[agent_namespace][subklass.service_class_name.to_sym]
+    end
+    
+    def self.service_class_name
+      "#{name}Service"
+    end
+        
     def self.load_schema
       @schema = ::Cylons::RemoteRegistry.get_remote_schema(self.name.downcase)
       
@@ -21,10 +40,6 @@ module Cylons
       @schema.remote_associations.each do |association_hash|
         __send__("build_remote_#{association_hash[:association_type]}_association", association_hash)
       end
-    end
-    
-    class << self
-      attr_accessor :remote, :schema
     end
     
     attr_accessor :errors

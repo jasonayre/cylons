@@ -3,8 +3,9 @@ require 'cylons/registry_adapter'
 module Cylons
   class Configuration
     attr_accessor :address,
+                  :agent_mode,
                   :logger,
-                  :port, 
+                  :port,
                   :registry_address,
                   :registry_port,
                   :registry_adapter,
@@ -23,6 +24,7 @@ module Cylons
       self.address = ::Cylons::Interface.primary
       self.port = (9000 + rand(100))
       self.logger = ::Rails.logger if defined?(Rails)
+      self.agent_mode = :static
       self
     end
     
@@ -33,6 +35,14 @@ module Cylons
       raise ::Cylons::InvalidRegistryAdapter unless ::Cylons::RegistryAdapter::VALID_REGISTRY_ADAPTERS.include?(adapter.to_sym)
       @registry_adapter = adapter.to_sym
       @registry = ::Cylons::RegistryAdapter.send(registry_adapter)
+    end
+    
+    def static?
+      agent_mode == :static
+    end
+    
+    def dynamic?
+      !static?
     end
   end
 end

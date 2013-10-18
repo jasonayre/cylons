@@ -2,6 +2,9 @@
 
 require 'thor'
 require 'cylons'
+
+ENV["RPC"] ||= "1"
+
 class Services < ::Thor
   class_option :app, :default => "./config/environment.rb"
   
@@ -33,4 +36,3 @@ end
     exit 0
   end
 end
-

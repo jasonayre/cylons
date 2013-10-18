@@ -8,6 +8,7 @@ require 'will_paginate'
 require "cylons/version"
 
 require 'cylons/attributes'
+require 'cylons/agent'
 require 'cylons/connection'
 require 'cylons/configuration'
 require 'cylons/errors'
@@ -25,9 +26,12 @@ require 'dcell/registries/zk_adapter'
 require 'pry'
 
 module Cylons
-  #dont load remotes if test env or SKIP_CYLONS=true (such as when running rake tasks)  
+  def self.connect?
+    !!ENV["RPC"]
+  end
+
   def self.skip_cylons?
-    !!ENV["SKIP_CYLONS"]
+    !connect?
   end
     
   def self.silence?
@@ -48,8 +52,11 @@ module Cylons
       
       ::ActiveSupport.run_load_hooks(:cylons, self)
     end
-    
     alias_method :config, :configuration
+    
+    
+    delegate :connect, :to => ::Cylons::Connection
+    delegate :connected?, :to => ::Cylons::Connection
   end
 end
 
