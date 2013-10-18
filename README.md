@@ -11,14 +11,14 @@ Youve got a product model in one app, a category model in another. A category ha
 
 **App 1**
 *Product Model:*
-```
+``` ruby
 class Product < ActiveRecord::Base
   include ::Cylons::Remote
   remote_belongs_to :category
 end
 ```
 *Category Agent:*
-```
+``` ruby
 class Category < Cylons::Agent
 
 end
@@ -26,14 +26,14 @@ end
 
 **App 2**
 *Category Model:*
-```
+``` ruby
 class Category < ActiveRecord::Base
   include ::Cylons::Remote
   remote_has_many :products
 end
 ```
 *Product Agent:*
-```
+``` ruby
 class Product < Cylons::Agent
   
 end
@@ -42,7 +42,7 @@ end
 That minimal amount of code will enable you to do things from app 3 such as:
 
 *App 3*
-```
+``` ruby
 category = Category.first
 category.products
 
@@ -72,15 +72,15 @@ Add those two together == winning.
 ### Reasons for building / Goals
 Originally it started as a way to communicate between my raspberry pis, because http is so last summer. Soon after getting a pi to communicate with my computer, I found myself wanting a database connection. So I ended up making it more active_record like. I then built it into its present state with a few goals.
 
-1) Super simple but robust, zero config rpc solution. When Im hacking on rails apps at home, I dont want the overhead of having to deal with a DDL. To do that, I wanted to make it as dynamic as possible
-2) Other than ActiveRemote and Protobuf, Ive seen nothing like this as far as cohesiveness between apps goes. I mean, if your services are generally returning data from a database, do you generally want to have a bunch of custom services scattered all over the place doing generally the same thing? Rhetorical question, the answer is no, you do not. Ernie/Thrift/ whatever other service layers solution may exist, but I havent seen other libs that wrap up the really painful and boring parts for you.
-3) Reusability -- Ok this one is a stretch, but my ideal vision of the future looks something like this. *skip ahead to dodge a rant*
+1. Super simple but robust, zero config rpc solution. When Im hacking on rails apps at home, I dont want the overhead of having to deal with a DDL. To do that, I wanted to make it as dynamic as possible
+2. Other than ActiveRemote and Protobuf, Ive seen nothing like this as far as cohesiveness between apps goes. I mean, if your services are generally returning data from a database, do you generally want to have a bunch of custom services scattered all over the place doing generally the same thing? Rhetorical question, the answer is no, you do not. Ernie/Thrift/ whatever other service layers solution may exist, but I havent seen other libs that wrap up the really painful and boring parts for you.
+3. Reusability -- Ok this one is a stretch, but my ideal vision of the future looks something like this. *skip ahead to dodge a rant*
 
-```
+``` ruby
 EveryWordpressGarbageSpaghettiCodeNoTalentAssClownWebsiteOnTheInternet.all.map(&:destroy)
 ```
 
-I really hate wordpress. With passion. Why? Because its not just the spaghetti code, if you can even call it code, core that it is built upon, its the fact that people build these crappy spaghetti code plugins, of which if you tried to take a single line of the code out of its original habitat it would explode into a million pieces, because the core of wordpress is so horrible that it forces these bad patterns on people. How wordpress got as big as it did boggles my mind. End rant.
+**I really hate wordpress**. With passion. Why? Because its not just the spaghetti code, if you can even call it code, core that it is built upon, its the fact that people build these crappy spaghetti code plugins, of which if you tried to take a single line of the code out of its original habitat it would explode into a million pieces, because the core of wordpress is so horrible that it forces these bad patterns on people. How wordpress got as big as it did boggles my mind. **End rant**.
 
 Ok so its not just wordpress, its alot of open source solutions. My point is this:
 
@@ -88,18 +88,18 @@ So very few if any open source platforms, or commercial buy the code platforms, 
 
 The future of computing is virtual machines, which will enable IMO, smaller cohesive services to really shine once you can partition OS's within OS's within OS's... Or however that pans out. So my point is, it would be cool to see people building and sharing reusable, small cohesive services that can be combined and mix and matched into a larger platform, so we're not always reinventing the wheel on new projects. -- *ONCE AGAIN PROBABLY A STRETCH BUT HEY A GEEK CAN DREAM*
 
-4) Extendability - I want to eventually get it to a point where its simply a base framework for defining reusable objects over your network. For instance, right now everything is based around the remote, or agent as im now calling a local remote, mapping back to a service, which is proxying calls to the actual database model. So Id like for it to eventually have an extendable enough base, something like:
-
+4. Extendability - I want to eventually get it to a point where its simply a base framework for defining reusable objects over your network. For instance, right now everything is based around the remote, or agent as im now calling a local remote, mapping back to a service, which is proxying calls to the actual database model. So Id like for it to eventually have an extendable enough base, something like:
+``` ruby
 Cylons::ActiveRecord::Agent
 Cylons::ActiveRecord::Service
 Cylons::ActiveRecord::Remote
-
+```
 Where, if you wanted a new type of remote mode, lets say a sidekiq worker, there would be an extension for that. So that would look like
-
+``` ruby
 Cylons::Sidekiq::Agent
 Cylons::Sidekiq::Service
 Cylons::Sidekiq::Remote
-
+```
 So you can share sidekiq workers, or any type of class that you are defining in more than one app, between apps. I think thats the direction Im going to head in the future. Feedback is more than welcome and encouraged BTW.
 
 ### Quick start
@@ -111,7 +111,6 @@ So you can share sidekiq workers, or any type of class that you are defining in 
 
 ```
 git clone https://github.com/jasonayre/cylons_demo
-
 ```
 
 open 4 new terminal windows/tabs
@@ -167,7 +166,7 @@ config.agent_mode = :dynamic
 
 Static mode will only define a local remote (or agent as im now calling them), if the matching service class exists in the remote registry. I.E.
 
-```
+``` ruby
 class Product < Cylons::Agent
   
 end
