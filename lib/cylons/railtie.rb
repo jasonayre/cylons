@@ -5,7 +5,8 @@ require 'active_record'
 require 'ransack'
 require 'ransack/search'
 require 'ransack/adapters/active_record/base'
-require 'will_paginate'
+# require 'will_paginate'
+require 'will_paginate/array'
 
 module Cylons
   class Railtie < ::Rails::Railtie

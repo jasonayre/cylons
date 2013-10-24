@@ -5,6 +5,7 @@ module Cylons
     module ClassMethods
       
       SEARCH_OPTION_KEYS = [:opts, :options].freeze
+      MAX_PER_PAGE = 1000
       
       def reload_remotes!
         ::Cylons::RemoteDiscovery.load_remotes unless ::Cylons.silence?
@@ -49,7 +50,7 @@ module Cylons
         else
           scoped_search = params.inject(scoped) do |combined_scope, param|
             combined_scope.send("by_#{param.first}", param.last)
-          end
+          end.paginate(:page => 1, :per_page => MAX_PER_PAGE)
         end
         
         scoped_search

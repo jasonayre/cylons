@@ -67,7 +67,7 @@ module Cylons
       end
       
       def scope_by(params)
-        execute(:scope_by, params).to_a
+        execute(:scope_by, params)
       end
       
       def save(id = nil, attributes)

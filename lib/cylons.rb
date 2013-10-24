@@ -5,6 +5,7 @@ require 'active_support/core_ext/hash'
 require 'active_support/inflector'
 require 'active_support/json'
 require 'will_paginate'
+require 'will_paginate/array' 
 require "cylons/version"
 
 require 'cylons/attributes'

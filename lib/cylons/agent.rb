@@ -42,31 +42,6 @@ module Cylons
       end
     end
     
-    attr_accessor :errors
-    
-    def destroy
-      return unless self.attributes["id"]
-      result = self.class.remote.destroy(self.attributes["id"])
-    end
-    
-    #have to manually update attributes if id wasnt set, i believe attr_accessible oddity so maybe can rip out later
-    def save
-      if self.attributes["id"]
-        result = self.class.remote.save(self.attributes["id"], self.attributes.with_indifferent_access.slice(*self.changed))
-        self.changed_attributes.clear
-      else
-        result = self.class.remote.save(nil, self.attributes.with_indifferent_access.slice(*self.changed))
-        
-        if result.errors.messages.present?
-          self.assign_attributes({:errors => result.errors})
-        else
-          self.assign_attributes(result.attributes)
-        end
-      end
-      
-      result
-    end
-
     def self.all
       remote.all
     end
@@ -108,6 +83,31 @@ module Cylons
     def self.first_or_initialize(params)
       result = remote.scope_by(params).first
       result ||= remote.new(params) unless result.present?
+      result
+    end
+    
+    attr_accessor :errors
+    
+    def destroy
+      return unless self.attributes["id"]
+      result = self.class.remote.destroy(self.attributes["id"])
+    end
+    
+    #have to manually update attributes if id wasnt set, i believe attr_accessible oddity so maybe can rip out later
+    def save
+      if self.attributes["id"]
+        result = self.class.remote.save(self.attributes["id"], self.attributes.with_indifferent_access.slice(*self.changed))
+        self.changed_attributes.clear
+      else
+        result = self.class.remote.save(nil, self.attributes.with_indifferent_access.slice(*self.changed))
+        
+        if result.errors.messages.present?
+          self.assign_attributes({:errors => result.errors})
+        else
+          self.assign_attributes(result.attributes)
+        end
+      end
+      
       result
     end
   end
