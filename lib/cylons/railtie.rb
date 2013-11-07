@@ -2,11 +2,9 @@ require 'cylons'
 require 'rails'
 require 'rails/railtie'
 require 'active_record'
-require 'ransack'
-require 'ransack/search'
-require 'ransack/adapters/active_record/base'
-# require 'will_paginate'
-require 'will_paginate/array'
+# require 'ransack'
+# require 'ransack/search'
+# require 'ransack/adapters/active_record/base'
 
 module Cylons
   class Railtie < ::Rails::Railtie
@@ -21,6 +19,7 @@ module Cylons
     
     #todo: overwrite ransack search method to auto paginate by default, or pull ransack out..
     ::ActiveSupport.on_load(:active_record) do
+
       ::ActiveRecord::Base.extend ::Ransack::Adapters::ActiveRecord::Base
       require 'will_paginate/active_record'
       

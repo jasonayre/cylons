@@ -73,7 +73,10 @@ module Cylons
     end
     
     def self.create(params)
-      remote.create(params)
+      puts "CALLING CREATE"
+      result = remote.create(params)
+      puts result.inspect
+      result
     end
     
     def self.search(params)

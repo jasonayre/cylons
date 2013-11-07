@@ -20,12 +20,12 @@ module Cylons
       end
       
       def execute(rpc_method, request_params = {})
-        begin
           @last_response = self.class.model.send(rpc_method.to_sym, request_params)
+          puts @last_response.inspect
+          @last_response
         rescue => e
           puts e.inspect
           @last_response = {:error => e.message}
-        end
       end
       
       def execute_with_args(rpc_method, *args)

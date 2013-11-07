@@ -7,9 +7,11 @@ module Cylons
     def self.included(klass)
       klass.class_eval do
         @remote_associations ||= []
+        @registered_remote_attributes ||= []
         
         class << self
           attr_accessor :remote_associations
+          attr_accessor :registered_remote_attributes
         end
         
         extend ::Cylons::ActiveRecordExtensions::ClassMethods

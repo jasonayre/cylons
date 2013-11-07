@@ -5,7 +5,7 @@ require 'active_support/core_ext/hash'
 require 'active_support/inflector'
 require 'active_support/json'
 require 'will_paginate'
-require 'will_paginate/array' 
+require 'will_paginate/array'
 require "cylons/version"
 
 require 'cylons/attributes'
@@ -26,6 +26,9 @@ require 'zk'
 require 'dcell/registries/zk_adapter'
 require 'pry'
 
+# class ActiveRecord::Base::TransactionState
+# end
+
 module Cylons
   def self.connect?
     !!ENV["RPC"]
@@ -37,6 +40,10 @@ module Cylons
     
   def self.silence?
     skip_cylons? || (defined?(Rails) && Rails.env == "test")
+  end
+  
+  def self.clear_registry
+    ::DCell.registry.instance_variable_get("@global_registry").clear
   end
   
   class << self

@@ -3,9 +3,20 @@ require 'cylons/remote_discovery'
 module Cylons
   module ActiveRecordExtensions
     module ClassMethods
-      
       SEARCH_OPTION_KEYS = [:opts, :options].freeze
       MAX_PER_PAGE = 1000
+      
+      def remote_attribute(name, options = {})
+        registered_remote_attributes << {:name => name}.merge(options)
+      end
+      
+      def remote_attributes(*args)
+        options = args.extract_options!
+        
+        args.each do |arg|
+          remote_attribute(arg, options)
+        end
+      end
       
       def reload_remotes!
         ::Cylons::RemoteDiscovery.load_remotes unless ::Cylons.silence?

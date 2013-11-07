@@ -12,6 +12,7 @@ class Services < ::Thor
   def start
     puts "Starting services"
     require options[:app]
+    ::ActiveRecord::Base.retrieve_connection unless ::ActiveRecord::Base.connected?
     
     ::Dir.glob(::Rails.root.join('app', 'models', "*.rb")).each{ |file| load file }
     
