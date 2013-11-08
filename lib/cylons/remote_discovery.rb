@@ -1,5 +1,5 @@
 require 'dcell'
-require 'cylons/remote_proxy'
+
 module Cylons
   class RemoteDiscovery
     class << self

@@ -11,8 +11,10 @@ module Cylons
     include ::Cylons::Attributes
     extend ::Cylons::Associations::ClassMethods
     
+    DEFAULT_REMOTE_ATTRIBUTES = [:id].freeze
+    
     class << self
-      attr_accessor :remote, :remote_class_name, :schema
+      attr_accessor :remote, :remote_class_name, :schema, :agent_namespace
     end
     
     def self.inherited(subklass)
@@ -21,10 +23,13 @@ module Cylons
     end
     
     def self.build_agent(subklass)
-      agent_namespace = ::Cylons::RemoteDiscovery.namespace_for_agent(subklass.name)
+      subklass.agent_namespace = ::Cylons::RemoteDiscovery.namespace_for_agent(subklass.name)
+      
       subklass.load_schema
-      subklass.remote = ::DCell::Node[agent_namespace][subklass.service_class_name.to_sym]
-      subklass.remote_class_name = "::DCell::Node[#{agent_namespace}][:#{subklass.service_class_name}]"
+      
+      # subklass.agent_name
+      # subklass.remote = ::DCell::Node[agent_namespace][subklass.service_class_name.to_sym]
+      # subklass.remote_class_name = "::DCell::Node[#{agent_namespace}][:#{subklass.service_class_name}]"
     end
     
     def self.service_class_name
@@ -34,7 +39,7 @@ module Cylons
     def self.load_schema
       @schema = ::Cylons::RemoteRegistry.get_remote_schema(self.name.downcase)
       
-      @schema.remote_attributes.each do |remote_attribute|
+      (DEFAULT_REMOTE_ATTRIBUTES + @schema.remote_attributes).uniq.each do |remote_attribute|
         attribute remote_attribute.to_sym
       end
       
@@ -86,6 +91,13 @@ module Cylons
       result = remote.scope_by(params).first
       result ||= remote.new(params) unless result.present?
       result
+    end
+    
+    def self.remote
+      puts agent_namespace
+      puts service_class_name
+      
+      ::DCell::Node[agent_namespace][service_class_name]
     end
     
     attr_accessor :errors

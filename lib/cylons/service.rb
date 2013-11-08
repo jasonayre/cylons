@@ -3,12 +3,12 @@ require 'cylons/rpc'
 module Cylons
   class Service
     include ::Celluloid
-    include ::Cylons::RPC
+    # include ::Cylons::RPC
     include ::ActiveModel::Dirty
     include ::Cylons::Attributes
     
     class << self
-      attr_accessor :model
+      attr_accessor :model, :proxy_class_name
     end
       
     def all
