@@ -59,6 +59,7 @@ module Cylons
     end
     
     def self.build_remote(namespace, remote_class_name)
+      puts "CALLING BUILD REMOTE"
       proxy_class_name = remote_class_name.to_s.gsub('Service', '')
       Object.const_set(proxy_class_name, Class.new(Cylons::RemoteProxy))
       

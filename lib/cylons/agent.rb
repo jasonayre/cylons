@@ -23,13 +23,8 @@ module Cylons
     end
     
     def self.build_agent(subklass)
-      subklass.agent_namespace = ::Cylons::RemoteDiscovery.namespace_for_agent(subklass.name)
-      
+      subklass.agent_namespace = ::Cylons::RemoteDiscovery.namespace_for_agent(subklass.name)      
       subklass.load_schema
-      
-      # subklass.agent_name
-      # subklass.remote = ::DCell::Node[agent_namespace][subklass.service_class_name.to_sym]
-      # subklass.remote_class_name = "::DCell::Node[#{agent_namespace}][:#{subklass.service_class_name}]"
     end
     
     def self.service_class_name
@@ -94,9 +89,6 @@ module Cylons
     end
     
     def self.remote
-      puts agent_namespace
-      puts service_class_name
-      
       ::DCell::Node[agent_namespace][service_class_name]
     end
     

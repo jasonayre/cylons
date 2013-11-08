@@ -12,18 +12,18 @@ module Cylons
       start_services
     end
     
-    def self.start_service(model_klass)
-      service_klass = build_service(model_klass)
+    def self.start_service(remote_class)
+      service_klass = build_service(remote_class)
       service_klass.supervise_as service_klass.name.to_sym
     end
     
-    def self.build_service(model_klass)
-      proxy_service_class_name = "#{model_klass.name}Service"
+    def self.build_service(remote_class)
+      proxy_service_class_name = "#{remote_class.name}Service"
       Object.const_set(proxy_service_class_name, Class.new(::Cylons::Service))
       service_klass = proxy_service_class_name.constantize
       
-      service_klass.model = model_klass
-      puts "REGISTERING_SERVICE_FOR #{model_klass}"
+      service_klass.remote_class = remote_class
+      puts "REGISTERING_SERVICE_FOR #{remote_class}"
       service_klass
     end
     

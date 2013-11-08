@@ -1,14 +1,13 @@
 require 'celluloid'
-require 'cylons/rpc'
+
 module Cylons
   class Service
     include ::Celluloid
-    # include ::Cylons::RPC
     include ::ActiveModel::Dirty
     include ::Cylons::Attributes
     
     class << self
-      attr_accessor :model, :proxy_class_name
+      attr_accessor :remote_class
     end
       
     def all
@@ -18,20 +17,20 @@ module Cylons
     def create(params)
       execute(:create, params)
     end
-      
+    
     def destroy(id)
       execute(:destroy, id)
     end
       
     def execute(rpc_method, request_params = {})
-      @last_response = self.class.model.send(rpc_method.to_sym, request_params)
+      @last_response = self.class.remote_class.send(rpc_method.to_sym, request_params)
       @last_response
     rescue => e
       @last_response = {:error => e.message}
     end
       
     def execute_with_args(rpc_method, *args)
-      @last_response = self.class.model.send(rpc_method.to_sym, *args)
+      @last_response = self.class.remote_class.send(rpc_method.to_sym, *args)
     rescue => e
       @last_response = {:error => e.message}
     end
