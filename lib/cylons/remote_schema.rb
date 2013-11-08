@@ -7,7 +7,6 @@ module Cylons
     #rails4 must specify remote_attributes in model
     def initialize(klass)
       if klass.registered_remote_attributes.any?
-        puts "REGISERED REMOTE ATTRS EXIST"
         @remote_attributes = klass.registered_remote_attributes.map{ |attribute_hash| attribute_hash[:name] }
       else
         klass.attribute_names.map{ |attr_name| klass.remote_attribute(attr_name) }

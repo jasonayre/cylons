@@ -26,9 +26,6 @@ require 'zk'
 require 'dcell/registries/zk_adapter'
 require 'pry'
 
-# class ActiveRecord::Base::TransactionState
-# end
-
 module Cylons
   def self.connect?
     !!ENV["RPC"]

@@ -20,23 +20,16 @@ module Cylons
       end
       
       def execute(rpc_method, request_params = {})
-          @last_response = self.class.model.send(rpc_method.to_sym, request_params)
-          puts @last_response.inspect
-          @last_response
-        rescue => e
-          puts e.inspect
-          @last_response = {:error => e.message}
+        @last_response = self.class.model.send(rpc_method.to_sym, request_params)
+        @last_response
+      rescue => e
+        @last_response = {:error => e.message}
       end
       
       def execute_with_args(rpc_method, *args)
-        begin
-          @last_response = self.class.model.send(rpc_method.to_sym, *args)
-        rescue => e
-          puts e.inspect
-          puts e.message
-          puts @last_response.inspect
-          @last_response = {:error => e.message}
-        end
+        @last_response = self.class.model.send(rpc_method.to_sym, *args)
+      rescue => e
+        @last_response = {:error => e.message}
       end
       
       def find(id)

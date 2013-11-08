@@ -6,8 +6,8 @@ module Cylons
   class Agent
     include ::ActiveModel::Dirty
     include ::ActiveModel::AttributeMethods
-    include ActiveAttr::Model
-    include ActiveAttr::MassAssignment
+    include ::ActiveAttr::Model
+    include ::ActiveAttr::MassAssignment
     include ::Cylons::Attributes
     extend ::Cylons::Associations::ClassMethods
     
@@ -63,9 +63,7 @@ module Cylons
     end
     
     def self.create(params)
-      puts "CALLING CREATE"
       result = remote.create(params)
-      puts result.inspect
       result
     end
     
