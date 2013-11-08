@@ -6,13 +6,19 @@ module Cylons
   class RemoteProxy
     include ::ActiveModel::Dirty
     include ::ActiveModel::AttributeMethods
-    include ActiveAttr::Model
-    include ActiveAttr::MassAssignment
+    include ::ActiveAttr::Model
+    include ::ActiveAttr::MassAssignment
     include ::Cylons::Attributes
     extend ::Cylons::Associations::ClassMethods
     
+    DEFAULT_REMOTE_ATTRIBUTES = [:id].freeze
+    
     def self.load_schema
       @schema = ::Cylons::RemoteRegistry.get_remote_schema(self.name.downcase)
+      
+      @schema.remote_attributes + DEFAULT_REMOTE_ATTRIBUTES
+      
+      puts @schema.remote_attributes.inspect
       
       @schema.remote_attributes.each do |remote_attribute|
         attribute remote_attribute.to_sym

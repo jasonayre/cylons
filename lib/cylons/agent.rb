@@ -12,7 +12,7 @@ module Cylons
     extend ::Cylons::Associations::ClassMethods
     
     class << self
-      attr_accessor :remote, :schema
+      attr_accessor :remote, :remote_class_name, :schema
     end
     
     def self.inherited(subklass)
@@ -24,6 +24,7 @@ module Cylons
       agent_namespace = ::Cylons::RemoteDiscovery.namespace_for_agent(subklass.name)
       subklass.load_schema
       subklass.remote = ::DCell::Node[agent_namespace][subklass.service_class_name.to_sym]
+      subklass.remote_class_name = "::DCell::Node[#{agent_namespace}][:#{subklass.service_class_name}]"
     end
     
     def self.service_class_name
