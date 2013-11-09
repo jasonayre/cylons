@@ -7,7 +7,6 @@ require 'active_support/json'
 require 'will_paginate'
 require 'will_paginate/array'
 require "cylons/version"
-
 require 'cylons/attributes'
 require 'cylons/agent'
 require 'cylons/connection'
@@ -57,7 +56,6 @@ module Cylons
       ::ActiveSupport.run_load_hooks(:cylons, self)
     end
     alias_method :config, :configuration
-    
     
     delegate :connect, :to => ::Cylons::Connection
     delegate :connected?, :to => ::Cylons::Connection

@@ -18,9 +18,6 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    puts ::DCell::Node.all.inspect
-    
     ::InventoryTestNode.stop
-    
   end
 end
