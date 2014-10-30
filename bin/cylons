@@ -7,27 +7,26 @@ ENV["RPC"] ||= "1"
 
 class Services < ::Thor
   class_option :app, :default => "./config/environment.rb"
-  
+
   desc "start", "Start cylon services"
   def start
     puts "Starting services"
     require options[:app]
-    
+
     ::Dir.glob(::Rails.root.join('app', 'models', "*.rb")).each{ |file| load file }
-    
+
     ::Cylons.logger.info "Cylon Remotes: #{::Cylons::RemoteRegistry.remotes}"
-    
+
     ::Cylons::RemoteRegistry.register_schemas
-    
+
     ::Cylons::ServiceManager.start
 
-    loop do
-    
-    end
+    sleep
   end
 end
 
 ::Services.start
+
 
 [:INT, :QUIT, :TERM].each do |signal|
   trap(signal) do

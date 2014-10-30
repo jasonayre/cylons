@@ -5,7 +5,7 @@ require 'active_support/core_ext/hash'
 require 'active_support/inflector'
 require 'active_support/json'
 require 'will_paginate'
-require 'will_paginate/array' 
+require 'will_paginate/array'
 require "cylons/version"
 
 require 'cylons/attributes'
@@ -17,6 +17,7 @@ require 'cylons/remote'
 require 'cylons/remote_registry'
 require 'cylons/remote_discovery'
 require 'cylons/remote_proxy'
+require 'cylons/remote_pagination'
 require 'cylons/registry_adapter'
 require 'cylons/service'
 require 'cylons/service_manager'
@@ -34,28 +35,28 @@ module Cylons
   def self.skip_cylons?
     !connect?
   end
-    
+
   def self.silence?
     skip_cylons? || (defined?(Rails) && Rails.env == "test")
   end
-  
+
   class << self
     attr_accessor :configuration, :logger
-    
+
     def configuration
       @configuration ||= ::Cylons::Configuration.new
     end
 
     def configure
       yield(configuration) if block_given?
-      
+
       @logger = configuration.logger
-      
+
       ::ActiveSupport.run_load_hooks(:cylons, self)
     end
     alias_method :config, :configuration
-    
-    
+
+
     delegate :connect, :to => ::Cylons::Connection
     delegate :connected?, :to => ::Cylons::Connection
   end
