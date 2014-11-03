@@ -4,11 +4,7 @@ require 'cylons/remote_registry'
 module Cylons
   class ServiceManager
     def self.start
-      ::Cylons.logger.info "LOADING REMOTES"
-      puts "LOADING REMOTES"
-      ::Cylons::RemoteDiscovery.load_remotes unless ::Cylons::RemoteDiscovery.loaded?
-      puts "STARTING LOCAL REMOTE SERVICES"
-      ::Cylons.logger.info "STARTING LOCAL REMOTE SERVICES"
+      ::Cylons.logger.info "STARTING CYLON SERVICES"
       start_services
     end
 
@@ -23,7 +19,7 @@ module Cylons
       service_klass = proxy_service_class_name.constantize
 
       service_klass.model = model_klass
-      puts "REGISTERING_SERVICE_FOR #{model_klass}"
+      ::Cylons.logger.info "REGISTERING_SERVICE_FOR #{model_klass}"
       service_klass
     end
 

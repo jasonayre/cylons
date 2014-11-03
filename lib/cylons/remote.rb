@@ -3,20 +3,16 @@ require 'cylons/active_record_extensions'
 
 module Cylons
   module Remote
-    
-    def self.included(klass)
-      klass.class_eval do
-        @remote_associations ||= []
-        
-        class << self
-          attr_accessor :remote_associations
-        end
-        
-        extend ::Cylons::ActiveRecordExtensions::ClassMethods
-        extend ::Cylons::Associations::ClassMethods
-        
-        ::Cylons::RemoteRegistry.register(klass)
-      end
+    extend ::ActiveSupport::Concern
+
+    include ::Cylons::ActiveRecordExtensions
+    include ::Cylons::Associations
+
+    included do
+      class_attribute :remote_associations
+      self.remote_associations = []
+
+      ::Cylons::RemoteRegistry.register(self)
     end
   end
 end
