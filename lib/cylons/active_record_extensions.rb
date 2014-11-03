@@ -2,11 +2,12 @@ require 'cylons/remote_discovery'
 
 module Cylons
   module ActiveRecordExtensions
+    extend ::ActiveSupport::Concern
+
+    SEARCH_OPTION_KEYS = [:opts, :options].freeze
+    MAX_PER_PAGE = 1000
+
     module ClassMethods
-
-      SEARCH_OPTION_KEYS = [:opts, :options].freeze
-      MAX_PER_PAGE = 1000
-
       def reload_remotes!
         ::Cylons::RemoteDiscovery.load_remotes unless ::Cylons.silence?
       end
@@ -35,25 +36,6 @@ module Cylons
           self.remote_associations << association_hash
           build_remote_has_many_association(association_hash)
         end
-      end
-
-      #TODO: Hacky, but something strange is going on here, and syntax will need to chagne for rails4... hrmmm
-      def scope_by(params = {})
-        search_options = params.extract!(*SEARCH_OPTION_KEYS)
-
-        search_options.delete_if {|k,v| v.nil? }
-
-        if search_options.present?
-          scoped_search = params.inject(scoped) do |combined_scope, param|
-            combined_scope.send("by_#{param.first}", param.last)
-          end.paginate(:page => search_options[:options][:page], :per_page => search_options[:options][:per_page])
-        else
-          scoped_search = params.inject(scoped) do |combined_scope, param|
-            combined_scope.send("by_#{param.first}", param.last)
-          end.paginate(:page => 1, :per_page => MAX_PER_PAGE)
-        end
-
-        scoped_search
       end
 
       def search(params = {})
