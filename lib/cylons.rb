@@ -31,6 +31,22 @@ module Cylons
     !!ENV["RPC"]
   end
 
+  def self.load_models
+    ::Dir.glob(model_paths).each{ |file|
+        puts "loading #{file}"
+       load file }
+  end
+
+  def self.model_paths
+    if configuration.model_paths
+      return configuration.model_paths
+    elsif defined?(::Rails)
+      [::Rails.root.join('app', 'models', "*.rb"), ::Rails.root.join('app', 'models', "**", "*.rb")]
+    else
+      []
+    end
+  end
+
   def self.skip_cylons?
     !connect?
   end

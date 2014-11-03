@@ -13,7 +13,7 @@ class Services < ::Thor
     puts "Starting services"
     require options[:app]
 
-    ::Dir.glob(::Rails.root.join('app', 'models', "*.rb")).each{ |file| load file }
+    ::Cylons.load_models
 
     ::Cylons.logger.info "Cylon Remotes: #{::Cylons::RemoteRegistry.remotes}"
 

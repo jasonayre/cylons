@@ -43,7 +43,6 @@ module Cylons
       discovered_remote_class_names
     end
 
-
     def self.remote_proxy_class_name(namespace, remote_class_name)
       "#{namespace}::#{remote_class_name.to_s}".gsub('Service', '')
     end
