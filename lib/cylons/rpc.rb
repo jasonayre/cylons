@@ -5,6 +5,7 @@ module Cylons
     include ::ActiveModel::Dirty
     include ::Cylons::Attributes
 
+    #need to wrap because to_a will leak connections otherwise
     def all
       ::ActiveRecord::Base.connection_pool.with_connection do
         execute(:all).to_a
@@ -39,23 +40,8 @@ module Cylons
       end
     end
 
-    def execute_with_args(rpc_method, *args)
-      ::ActiveRecord::Base.connection_pool.with_connection do
-        begin
-          @last_response = self.class.model.send(rpc_method.to_sym, *args)
-        rescue => e
-          puts e.inspect
-          puts e.message
-          puts @last_response.inspect
-          @last_response = {:error => e.message}
-        end
-      end
-    end
-
     def find(id)
-      ::ActiveRecord::Base.connection_pool.with_connection do
-        execute(:find, id)
-      end
+      execute(:find, id)
     end
 
     def first
@@ -72,10 +58,6 @@ module Cylons
 
     def search(params)
       response = execute(:search, params)
-      # ::ActiveRecord::Base.connection_pool.with_connection do
-      #
-      #   response
-      # end
     end
 
     def scope_by(params)
