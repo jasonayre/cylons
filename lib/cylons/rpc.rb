@@ -1,4 +1,3 @@
-require 'ransack'
 module Cylons
   module RPC
     extend ::ActiveSupport::Concern
