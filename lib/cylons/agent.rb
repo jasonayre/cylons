@@ -9,22 +9,21 @@ module Cylons
     include ::ActiveAttr::Model
     include ::ActiveAttr::MassAssignment
     include ::Cylons::Attributes
-    extend ::Cylons::Associations::ClassMethods
+    include ::Cylons::Associations
 
     class << self
-      attr_accessor :remote, :schema
+      attr_accessor :schema, :built
     end
+
+    @built = false
 
     def self.inherited(subklass)
       ::Cylons.connect unless ::Cylons.connected?
-      build_agent(subklass)
     end
 
-    def self.build_agent(subklass)
-      agent_namespace = ::Cylons::RemoteDiscovery.namespace_for_agent(subklass.name)
-      puts agent_namespace
-      subklass.load_schema
-      subklass.remote = ::DCell::Node[agent_namespace][subklass.service_class_name.to_sym]
+    def self.build_agent
+      load_schema
+      @built = true
     end
 
     def self.service_class_name
@@ -32,7 +31,8 @@ module Cylons
     end
 
     def self.load_schema
-      @schema = ::Cylons::RemoteRegistry.get_remote_schema(self.name.downcase)
+      puts "LOADING SCHEMA"
+      @schema = ::Cylons::RemoteRegistry.get_remote_schema(name.downcase)
 
       @schema.remote_attributes.each do |remote_attribute|
         attribute remote_attribute.to_sym
@@ -45,6 +45,10 @@ module Cylons
 
     def self.all
       remote.all
+    end
+
+    def self.agent_namespace
+      @agent_namespace ||= ::Cylons::RemoteDiscovery.namespace_for_agent(self.name)
     end
 
     def self.count
@@ -85,6 +89,28 @@ module Cylons
       result = remote.scope_by(params).first
       result ||= remote.new(params) unless result.present?
       result
+    end
+
+    def self.remote
+      raise ::Cylons::CylonsRemoteServiceNotFound, "#{service_class_name} not found" unless remote?
+
+      build_agent unless built
+
+      ::DCell::Node[agent_namespace][service_class_name.to_sym]
+    end
+
+    def self.remote?
+      agent_namespace && remote_application? && remote_service?
+    end
+
+    def self.remote_application?
+      ::DCell::Node.all.any?{ |node|
+        node.id == agent_namespace
+      }
+    end
+
+    def self.remote_service?
+      ::DCell::Node[agent_namespace].actors.include?(service_class_name.to_sym)
     end
 
     attr_accessor :errors
