@@ -21,37 +21,12 @@ module Cylons
         end.all
 
         if search_options.present?
-          paginated_results = query_scope.paginate(:page => search_options[:options][:page], :per_page => search_options[:options][:per_page])
-
-          # with_pagination_meta(paginated_result)
-
+          query_scope.paginate(:page => search_options[:options][:page], :per_page => search_options[:options][:per_page])
         else
-          paginated_results = query_scope.paginate(:page => 1, :per_page => MAX_PER_PAGE)
-
-          # binding.pry
-
-          paginated_results
-
-          # with_pagination_meta(paginated_results)
+          query_scope.paginate(:page => 1, :per_page => MAX_PER_PAGE)
         end
       end
 
-      def with_pagination_meta(result)
-        META_METHODS.each do |method|
-          result.instance_variable_set("@#{method.to_s}", result.__send__(method))
-        end
-
-        result
-        # result.inject(META_METHODS) do |result_array, method|
-        #   result_array.instance_variable_set("@#{method.to_s}", result_array.__send__(method))
-        #   result_array
-        # end
-        #
-        # result
-      end
     end
-
-
-
   end
 end
