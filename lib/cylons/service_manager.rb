@@ -29,10 +29,6 @@ module Cylons
       end if remotes?
     end
 
-    def self.service_klass_name
-      "#{klass.name}Service"
-    end
-
     def self.remotes?
       ::Cylons::RemoteRegistry.remotes.any?
     end
