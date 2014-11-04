@@ -11,6 +11,9 @@ module Cylons
     include ::Cylons::Attributes
     include ::Cylons::Associations
 
+    class_attribute :unsucessful_remote_connection_attempts
+    self.unsucessful_remote_connection_attempts ||= 0
+
     class << self
       attr_accessor :schema, :built
     end
@@ -31,7 +34,8 @@ module Cylons
     end
 
     def self.load_schema
-      puts "LOADING SCHEMA"
+      ::Cylons.logger.debug { "Loading schema for #{name}" }
+
       @schema = ::Cylons::RemoteRegistry.get_remote_schema(name.downcase)
 
       @schema.remote_attributes.each do |remote_attribute|
@@ -92,7 +96,7 @@ module Cylons
     end
 
     def self.remote
-      raise ::Cylons::CylonsRemoteServiceNotFound, "#{service_class_name} not found" unless remote?
+      remote_connection_failed! unless remote?
 
       build_agent unless built
 
@@ -111,6 +115,17 @@ module Cylons
 
     def self.remote_service?
       ::DCell::Node[agent_namespace].actors.include?(service_class_name.to_sym)
+    end
+
+    def self.remote_connection_failed!
+      if self.unsucessful_remote_connection_attempts > ::Cylons.config.remote_connection_failure_threshold
+        self.unsucessful_remote_connection_attempts = 0
+        raise ::Cylons::CylonsRemoteServiceNotFound, "#{service_class_name} not found"
+      else
+        sleep(::Cylons.config.remote_connection_failure_timeout)
+        self.unsucessful_remote_connection_attempts += 1
+        remote_connection_failed! unless remote?
+      end
     end
 
     attr_accessor :errors
