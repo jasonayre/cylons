@@ -1,8 +1,15 @@
-ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+require 'active_record'
 
-ActiveRecord::Schema.define do
-  self.verbose = false
+ActiveRecord::Base.establish_connection(
+  :adapter => "sqlite3",
+  :database => "spec/test.db"
+)
 
+ActiveRecord::Base.connection.tables.each do |table|
+  ActiveRecord::Base.connection.drop_table(table)
+end
+
+ActiveRecord::Schema.define(:version => 1) do
   create_table "products", :force => true do |t|
     t.string   "name"
     t.integer  "category_id"
@@ -14,5 +21,4 @@ ActiveRecord::Schema.define do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
-
 end
