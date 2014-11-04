@@ -36,4 +36,10 @@ describe ::Cylons::ServiceManager do
     end
   end
 
+  describe ".service_defined?" do
+    it {
+      subject.service_defined?(OpenStruct).should be false
+    }
+  end
+
 end

@@ -15,15 +15,10 @@ module Cylons
       @remotes << klass
     end
 
-    def self.register_class?(namespaced_class_name)
-      !defined?(namespaced_class_name.constantize)
-    end
-
     def self.register_remote_schemas
       @remotes.each do |remote|
         ::Cylons::RemoteRegistry.register_remote_schema(remote)
       end
     end
-
   end
 end

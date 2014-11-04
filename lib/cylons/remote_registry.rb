@@ -20,10 +20,6 @@ module Cylons
       @remotes << klass
     end
 
-    def self.register_class?(namespaced_class_name)
-      !defined?(namespaced_class_name.constantize)
-    end
-
     def self.register_schemas
       @remotes.each do |remote|
         ::Cylons.logger.info remote
