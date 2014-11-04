@@ -11,8 +11,10 @@ require "cylons/version"
 require 'cylons/attributes'
 require 'cylons/agent'
 require 'cylons/connection'
-require 'cylons/configuration'
+# require 'cylons/configuration'
+require 'cylons/config'
 require 'cylons/errors'
+require 'cylons/logging'
 require 'cylons/remote'
 require 'cylons/remote_registry'
 require 'cylons/remote_discovery'
@@ -56,10 +58,10 @@ module Cylons
   end
 
   class << self
-    attr_accessor :configuration, :logger
+    attr_accessor :configuration
 
     def configuration
-      @configuration ||= ::Cylons::Configuration.new
+      @configuration ||= ::Cylons::Config.new
     end
 
     def configure
@@ -70,6 +72,10 @@ module Cylons
       ::ActiveSupport.run_load_hooks(:cylons, self)
     end
     alias_method :config, :configuration
+
+    def logger
+      ::Cylons.config.logger
+    end
 
 
     delegate :connect, :to => ::Cylons::Connection
